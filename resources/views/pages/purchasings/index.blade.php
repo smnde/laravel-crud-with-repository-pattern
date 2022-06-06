@@ -3,21 +3,29 @@
 	
 	<h3 class="text-2xl mb-2">Pembelian</h3>
 
-	<button onclick="toggleModal()" class="block mb-4 text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="modal">
-		Cari produk
-	</button>
+	<div class="flex justify-between">
+		<button onclick="toggleModal()" class="block mb-4 text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="modal">
+			Cari produk
+		</button>
+
+		<div class="px-5 py-5 text-xl font-semibold">
+			Grand total : Rp. {{ Cart::total() }}
+		</div>
+	</div>
 
 	@component('components.table')
 		@slot('tableId')
 			cart
 		@endslot
 		@slot('thead')
-			<th scope="col" class="px-6 py-4">Name</th>
+			<th scope="col" class="px-6 py-4">Nama</th>
 			<th scope="col" class="px-6 py-4">Qty</th>
 			<th scope="col" class="px-6 py-4">Harga satuan</th>
+			<th scope="col" class="px-6 py-4">Total</th>
 			<th scope="col" class="px-6 py-4">
 				<span class="sr-only">Edit</span>
 			</th>
+			<th></th>
 			<th scope="col" class="px-6 py-4 text-right">
 				<form action="{{ route('purchasings.saveTransaction') }}" method="POST">
 					@csrf
@@ -39,8 +47,9 @@
 					<td	td class="px-6 py-2">
 						<input type="text" name="qty" class="py-1 px-1 w-10 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600" value="{{ $item->qty }}">
 					</td>
-					<td	td class="px-6 py-2">Rp. {{ $item->price }}</td>
-					<td colspan="2" class="py-2 px-6 text-right">
+					<td class="px-6 py-2">Rp. {{ $item->price }}</td>
+					<td class="px-6 py-2">Rp. {{ $item->total }}</td>
+					<td colspan="3" class="py-2 px-6 text-right">
 						<form action="{{ route('purchasings.removeFromCart', $item->rowId)}}" method="POST">
 							@csrf
 							<button type="submit" class="text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800">Batal</button>
@@ -48,8 +57,12 @@
 					</td>
 				</tr>
 			@empty
-				<tr></tr>
-			@endforelse	
+				<tr>
+					<td colspan="7" class="text-center py-10 px-10">
+						Kosong
+					</td>
+				</tr>
+			@endforelse
 		@endslot
 	@endcomponent
 
